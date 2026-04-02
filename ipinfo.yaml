@@ -2,15 +2,15 @@
 #!desc = 在设置页面输入策略组名称，面板将实时显示该组节点的出口 IP。
 #!system = ios
 
-# --- 模块设置 UI (参考示例写法) ---
+# --- 模块设置 UI 生成 ---
 env:
   monitor_group_name:
     title: "监控策略组名称"
-    description: "请输入您配置文件中现有的策略组名称（如：Proxy、Select）"
+    description: "请输入您配置文件中现有的策略组名称（例如：Proxy、Jerry-Nodes）"
     type: string
     default: "Proxy"
 
-# --- 面板组件 (Widget) ---
+# --- 面板组件 (Widget) 配置 ---
 widgets:
   - name: "Group IP Monitor"
     title: "节点状态"
@@ -19,9 +19,8 @@ widgets:
     script_name: get_node_ip
     update_interval: 60
 
-# --- 脚本注册 ---
+# --- 脚本注册 (已更新路径) ---
 scriptings:
   - name: get_node_ip
     type: generic
-    # 请确保此 JS 文件已上传至您的 GitHub 对应路径
-    script_url: "https://raw.githubusercontent.com/robodev688/egern/refs/heads/main/ipinfo.js"
+    script_url: "https://raw.githubusercontent.com/robodev688/egern/refs/heads/main/group_ip.js"
