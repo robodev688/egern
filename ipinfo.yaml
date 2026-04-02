@@ -1,38 +1,32 @@
-name: "自定义策略组出口 IP"
-description: "用户可选填写一个策略组名称；未填写时默认使用 PROXY 查询出口 IP。"
-author: "Nerdy"
-icon: "network"
+#!name=节点检测工具
+#!desc=适用于 Egern 的节点检测工具，包含地理位置、节点解锁、入口落地查询。由于 Egern 机制限制，检测结果将通过仪表盘组件（Widget）或手动运行脚本展示。
+#!author=xream, Keywos, KOP-XIAO, dcpengx
+#!homepage=https://hub.kelee.one
+#!icon=https://raw.githubusercontent.com/luestr/IconResource/main/Other_icon/120px/Node_detection_tool.png
 
-env_schema:
-  GROUP_NAME:
-    name: "策略组名称"
-    description: "可留空；留空时默认使用 PROXY"
-    default_value: ""
-
-  IP_CHECK_URL:
-    name: "IP 检测 URL"
-    description: "返回当前出口 IP 的接口地址，建议返回纯文本 IP"
-    default_value: "https://api.ipify.org"
-
-  PANEL_TITLE:
-    name: "面板标题"
-    description: "小组件顶部显示名称"
-    default_value: "策略组出口 IP"
-
+# 脚本定义
 scriptings:
-  - generic:
-      name: "group_ip"
-      script_url: "https://raw.githubusercontent.com/robodev688/egern/main/group_ip.js"
-      timeout: 20
-      env:
-        GROUP_NAME: ""
-        IP_CHECK_URL: "https://api.ipify.org"
-        PANEL_TITLE: "策略组出口 IP"
+  - name: 入口落地查询
+    type: schedule
+    script_url: https://kelee.one/Resource/JavaScript/Node_detection_tool/NetworkEntryAndExitQueries.js
+    timeout: 10
 
+  - name: 地理位置查询
+    type: schedule
+    script_url: https://kelee.one/Resource/JavaScript/Node_detection_tool/LocationDetection.js
+    timeout: 10
+
+  - name: 节点解锁查询
+    type: schedule
+    script_url: https://kelee.one/Resource/JavaScript/Node_detection_tool/NodeUnlockDetection.js
+    timeout: 20
+
+# 仪表盘面板定义（实现“面板显示详细信息”）
 widgets:
-  - name: "自定义策略组出口 IP"
-    script_name: "group_ip"
-    env:
-      GROUP_NAME: ""
-      IP_CHECK_URL: "https://api.ipify.org"
-      PANEL_TITLE: "策略组出口 IP"
+  - name: 节点检测面板
+    title: 节点检测
+    type: script
+    # 这里默认关联地理位置查询，你可以根据需要修改 script_name
+    script_name: 地理位置查询
+    update_interval: 3600
+    description: 显示当前连接节点的详细地理位置及解锁状态
