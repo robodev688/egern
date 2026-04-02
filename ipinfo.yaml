@@ -1,28 +1,23 @@
-#!name = 策略组 IP 监控模块
-#!desc = 在模块设置中选择策略组，面板将实时显示该组节点的出口 IP。
+#!name = 策略监控模块
+#!desc = 在模块设置中选择策略组，面板显示对应节点 IP。
 #!system = ios
 
-# --- 模块设置 UI 生成 ---
 env:
-  monitor_group:
-    title: "目标策略组"
-    description: "请输入或选择你配置文件中现有的策略组名称"
+  target_group:
+    title: "选择目标策略组"
+    description: "请在下方输入框填写你想监控的策略组名称"
     type: string
     default: "Proxy"
-    # 如果你想手动指定几个固定选项，可以加上 options: ["Proxy", "Jerry-Nodes", "Final"]
 
-# --- 面板组件配置 ---
 widgets:
   - name: "节点 IP 监控"
-    title: "策略组状态"
+    title: "策略组 IP"
     type: script
     icon: "network"
-    script_name: group_ip_tracker
+    script_name: get_group_ip
     update_interval: 60
 
-# --- 脚本注册 ---
 scriptings:
-  - name: group_ip_tracker
+  - name: get_group_ip
     type: generic
-    # 这里的 script_url 需替换为你实际存放 JS 脚本的地址
-    script_url: "https://raw.githubusercontent.com/user/repo/main/group_ip.js"
+    script_url: "https://raw.githubusercontent.com/robodev688/egern/refs/heads/main/ipinfo.js"
