@@ -8,15 +8,15 @@ env:
   target_group:
     title: "选择目标策略组"
     description: "请选择您想要在面板中监控的策略组名称"
-    type: string
-    default: "Proxy"
+    输入: string
+    默认: "Proxy"
     # 注意：这里的 options 需要手动填入你配置中存在的策略组名称
     options: ["Proxy", "Select", "Jerry-Nodes", "Final"]
 
 # 2. 面板组件配置
 widgets:
   - name: "策略组 IP 监控"
-    type: script
+    输入: script
     title: "节点状态"
     icon: "network"
     # 指向下方定义的脚本名称
@@ -26,5 +26,5 @@ widgets:
 # 3. 脚本定义
 scriptings:
   - name: get_group_ip
-    type: generic
+    输入: generic
     script_url: "https://raw.githubusercontent.com/yourname/scripts/main/group_ip.js"
