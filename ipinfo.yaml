@@ -1,23 +1,68 @@
-#!name = 策略监控模块
-#!desc = 在模块设置中选择策略组，面板显示对应节点 IP。
-#!system = ios
+name: "自定义策略组出口 IP"
+description: "通过模块 UI 填写策略组参数，并在小组件中添加策略组与显示该策略组出口 IP"
+author: "Nerdy"
+icon: "network"
 
-env:
-  monitor_group_name:
-    title: "监控策略组名称"
-    description: "请输入策略组名称（如 Proxy）"
-    type: string
-    default: "Proxy"
+env_schema:
+  GROUP_NAME:
+    name: 策略组名称
+    description: 要创建并用于查询出口 IP 的策略组名称
+    default_value: "我的策略组"
 
-widgets:
-  - name: "Group IP Monitor"
-    title: "节点状态"
-    type: script
-    icon: "network"
-    script_name: get_node_ip
-    update_interval: 60
+  GROUP_TYPE:
+    name: 策略组类型
+    description: 对应 URL Scheme 的 type 参数
+    options:
+      - external
+
+  EXTERNAL_TYPE:
+    name: 外部策略组类型
+    description: 对应 URL Scheme 的 external_type 参数
+    options:
+      - auto_test
+
+  POLICY:
+    name: 初始策略
+    description: 对应 URL Scheme 的 policy 参数，可留空
+    default_value: ""
+
+  POLICY_URL:
+    name: 策略来源 URL
+    description: 对应 URL Scheme 的 url 参数，可留空
+    default_value: ""
+
+  IP_CHECK_URL:
+    name: IP 检测 URL
+    description: 返回当前出口 IP 的接口地址，建议返回纯文本 IP
+    default_value: "https://api.ipify.org"
+
+  PANEL_TITLE:
+    name: 面板标题
+    description: 小组件顶部显示名称
+    default_value: "策略组出口 IP"
 
 scriptings:
-  - name: get_node_ip
-    type: generic
-    script_url: "https://raw.githubusercontent.com/robodev688/egern/refs/heads/main/group_ip.js"
+  - generic:
+      name: "group_ip"
+      script_url: "https://raw.githubusercontent.com/robodev688/egern/main/group_ip.js"
+      timeout: 20
+      env:
+        GROUP_NAME: "我的策略组"
+        GROUP_TYPE: "external"
+        EXTERNAL_TYPE: "auto_test"
+        POLICY: ""
+        POLICY_URL: ""
+        IP_CHECK_URL: "https://api.ipify.org"
+        PANEL_TITLE: "策略组出口 IP"
+
+widgets:
+  - name: "ipinfo"
+    script_name: "group_ip"
+    env:
+      GROUP_NAME: "我的策略组"
+      GROUP_TYPE: "external"
+      EXTERNAL_TYPE: "auto_test"
+      POLICY: ""
+      POLICY_URL: ""
+      IP_CHECK_URL: "https://api.ipify.org"
+      PANEL_TITLE: "策略组出口 IP"
