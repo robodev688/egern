@@ -1,0 +1,32 @@
+#!name=节点检测工具
+#!desc=适用于 Egern 的节点检测工具，包含地理位置、节点解锁、入口落地查询。由于 Egern 机制限制，检测结果将通过仪表盘组件（Widget）或手动运行脚本展示。
+#!author=xream, Keywos, KOP-XIAO, dcpengx
+#!homepage=https://hub.kelee.one
+#!icon=https://raw.githubusercontent.com/luestr/IconResource/main/Other_icon/120px/Node_detection_tool.png
+
+# 脚本定义
+scriptings:
+  - name: 入口落地查询
+    type: schedule
+    script_url: https://kelee.one/Resource/JavaScript/Node_detection_tool/NetworkEntryAndExitQueries.js
+    timeout: 10
+
+  - name: 地理位置查询
+    type: schedule
+    script_url: https://kelee.one/Resource/JavaScript/Node_detection_tool/LocationDetection.js
+    timeout: 10
+
+  - name: 节点解锁查询
+    type: schedule
+    script_url: https://kelee.one/Resource/JavaScript/Node_detection_tool/NodeUnlockDetection.js
+    timeout: 20
+
+# 仪表盘面板定义（实现“面板显示详细信息”）
+widgets:
+  - name: 节点检测面板
+    title: 节点检测
+    type: script
+    # 这里默认关联地理位置查询，你可以根据需要修改 script_name
+    script_name: 地理位置查询
+    update_interval: 3600
+    description: 显示当前连接节点的详细地理位置及解锁状态
