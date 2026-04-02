@@ -1,8 +1,8 @@
 export default async function (ctx) {
   const rawGroupName = (ctx.env.GROUP_NAME || "").trim();
   const policyName = rawGroupName || "PROXY";
-  const ipCheckUrl = ctx.env.IP_CHECK_URL || "https://api.ipify.org";
-  const title = ctx.env.PANEL_TITLE || "策略组出口 IP";
+  const ipCheckUrl = (ctx.env.IP_CHECK_URL || "https://api.ipify.org").trim();
+  const title = (ctx.env.PANEL_TITLE || "策略组出口 IP").trim();
 
   const addUrl =
     "egern:/policy_groups/new" +
@@ -15,6 +15,8 @@ export default async function (ctx) {
     ? `策略组: ${rawGroupName}`
     : "默认代理: PROXY";
 
+  let sourceText = `检测接口: ${ipCheckUrl}`;
+
   try {
     const resp = await ctx.http.get(ipCheckUrl, {
       policy: policyName,
@@ -24,7 +26,7 @@ export default async function (ctx) {
     const text = (await resp.text()).trim();
     ipText = text || "接口返回为空";
 
-    const ipInfo = ctx.lookupIP(text);
+    const ipInfo = ctx.lookupIP(ipText);
     if (ipInfo) {
       infoText = rawGroupName
         ? `${rawGroupName} · ${ipInfo.country} · AS${ipInfo.asn} ${ipInfo.organization}`
@@ -40,7 +42,7 @@ export default async function (ctx) {
   return {
     type: "widget",
     padding: 16,
-    gap: 8,
+    gap: 10,
     backgroundColor: "#1C1C1E",
     children: [
       {
@@ -101,6 +103,13 @@ export default async function (ctx) {
             type: "text",
             text: infoText,
             textColor: "#C7C7CC",
+            maxLines: 2,
+            minScale: 0.6
+          },
+          {
+            type: "text",
+            text: sourceText,
+            textColor: "#8E8E93",
             maxLines: 2,
             minScale: 0.6
           }
