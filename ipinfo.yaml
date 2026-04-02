@@ -1,30 +1,28 @@
-#!name = 策略监控模块
-#!desc = 在设置页面自动生成策略组选择器，并在面板显示对应节点 IP。
+#!name = 策略组 IP 监控模块
+#!desc = 在模块设置中选择策略组，面板将实时显示该组节点的出口 IP。
 #!system = ios
 
-# 1. 自动生成 UI 控件
-# 这里的 env 配置会在 Egern 模块设置页面自动生成一个下拉选择框
+# --- 模块设置 UI 生成 ---
 env:
-  target_group:
-    title: "选择目标策略组"
-    description: "请选择您想要在面板中监控的策略组名称"
-    输入: string
-    默认: "Proxy"
-    # 注意：这里的 options 需要手动填入你配置中存在的策略组名称
-    options: ["Proxy", "Select", "Jerry-Nodes", "Final"]
+  monitor_group:
+    title: "目标策略组"
+    description: "请输入或选择你配置文件中现有的策略组名称"
+    type: string
+    default: "Proxy"
+    # 如果你想手动指定几个固定选项，可以加上 options: ["Proxy", "Jerry-Nodes", "Final"]
 
-# 2. 面板组件配置
+# --- 面板组件配置 ---
 widgets:
-  - name: "策略组 IP 监控"
-    输入: script
-    title: "节点状态"
+  - name: "节点 IP 监控"
+    title: "策略组状态"
+    type: script
     icon: "network"
-    # 指向下方定义的脚本名称
-    script_name: get_group_ip
+    script_name: group_ip_tracker
     update_interval: 60
 
-# 3. 脚本定义
+# --- 脚本注册 ---
 scriptings:
-  - name: get_group_ip
-    输入: generic
-    script_url: "https://raw.githubusercontent.com/yourname/scripts/main/group_ip.js"
+  - name: group_ip_tracker
+    type: generic
+    # 这里的 script_url 需替换为你实际存放 JS 脚本的地址
+    script_url: "https://raw.githubusercontent.com/user/repo/main/group_ip.js"
