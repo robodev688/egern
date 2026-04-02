@@ -1,22 +1,22 @@
 name: "自定义策略组出口 IP"
-description: "用户可选填写一个策略组名称；未填写时默认使用 PROXY 查询出口 IP"
+description: "用户可选填写一个策略组名称；未填写时默认使用 PROXY 查询出口 IP。"
 author: "Nerdy"
 icon: "network"
 
 env_schema:
   GROUP_NAME:
-    name: 策略组名称
-    description: 可留空；留空时默认使用 PROXY
+    name: "策略组名称"
+    description: "可留空；留空时默认使用 PROXY"
     default_value: ""
 
   IP_CHECK_URL:
-    name: IP 检测 URL
-    description: 返回当前出口 IP 的接口地址，建议返回纯文本 IP
+    name: "IP 检测 URL"
+    description: "返回当前出口 IP 的接口地址，建议返回纯文本 IP"
     default_value: "https://api.ipify.org"
 
   PANEL_TITLE:
-    name: 面板标题
-    description: 小组件顶部显示名称
+    name: "面板标题"
+    description: "小组件顶部显示名称"
     default_value: "策略组出口 IP"
 
 scriptings:
@@ -30,7 +30,7 @@ scriptings:
         PANEL_TITLE: "策略组出口 IP"
 
 widgets:
-  - name: "ipinfo"
+  - name: "自定义策略组出口 IP"
     script_name: "group_ip"
     env:
       GROUP_NAME: ""
