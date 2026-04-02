@@ -1,47 +1,38 @@
 /**
- * Egern 面板脚本：显示策略组当前节点及 IP
+ * 逻辑：读取 env 变量 -> 获取策略组当前节点 -> 请求 IP 接口 -> 返回面板数据
  */
 
 async function main() {
-  // 1. 获取 UI 控件中设置的策略组名称
-  const groupName = $env.target_group;
-  
-  if (!groupName) {
-    $done({
-      title: "配置错误",
-      content: "请在模块设置中选择策略组",
-      icon: "exclamationmark.triangle",
-      "icon-color": "#FF0000"
-    });
+  // 1. 读取模块 UI 中填写的策略组名称
+  const targetGroup = $env.monitor_group;
+
+  if (!targetGroup) {
+    $done({ title: "配置错误", content: "请先在模块设置中填写策略组名称", icon: "warn" });
     return;
   }
 
-  // 2. 获取该策略组当前选中的节点名称
-  // 使用 Egern API: $proxy.getRunningServer(groupName)
-  const serverName = $proxy.getRunningServer(groupName);
+  // 2. 获取该策略组当前正在运行的节点名 (Egern API)
+  const currentNode = $proxy.getRunningServer(targetGroup);
 
-  if (!serverName) {
-    $done({
-      title: groupName,
-      content: "未找到活跃节点",
-      icon: "bolt.horizontal.slash"
-    });
+  if (!currentNode) {
+    $done({ title: targetGroup, content: "未找到活跃节点", icon: "bolt.slash" });
     return;
   }
 
-  // 3. 模拟或获取节点 IP (由于隐私和性能，通常通过查询外部 API 或 DNS)
-  // 这里演示通过 http 请求获取该节点出口 IP
-  $httpClient.get("http://ip-api.com/json", (error, response, data) => {
-    if (error) {
+  // 3. 发起请求获取出口 IP
+  $httpClient.get("http://ip-api.com/json?lang=zh-CN", (error, response, data) => {
+    if (error || !data) {
       $done({
-        title: groupName,
-        content: `节点: ${serverName}\n无法获取 IP`,
+        title: `策略组: ${targetGroup}`,
+        content: `节点: ${currentNode}\nIP 获取失败`,
+        icon: "wifi.exclamationmark"
       });
     } else {
       const info = JSON.parse(data);
+      // 4. 将结果推送到 Egern 面板
       $done({
-        title: `${groupName} -> ${serverName}`,
-        content: `出口 IP: ${info.query}\n归属地: ${info.country}`,
+        title: `策略组: ${targetGroup}`,
+        content: `节点: ${currentNode}\n出口IP: ${info.query}\n归属: ${info.country} ${info.city}`,
         icon: "location.fill",
         "icon-color": "#34C759"
       });
