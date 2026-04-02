@@ -1,41 +1,40 @@
 export default async function (ctx) {
-  const groupName = ctx.env.GROUP_NAME || "我的策略组";
-  const groupType = ctx.env.GROUP_TYPE || "external";
-  const externalType = ctx.env.EXTERNAL_TYPE || "auto_test";
-  const policy = ctx.env.POLICY || "";
-  const policyUrl = ctx.env.POLICY_URL || "";
+  const rawGroupName = (ctx.env.GROUP_NAME || "").trim();
+  const policyName = rawGroupName || "PROXY";
   const ipCheckUrl = ctx.env.IP_CHECK_URL || "https://api.ipify.org";
   const title = ctx.env.PANEL_TITLE || "策略组出口 IP";
 
   const addUrl =
     "egern:/policy_groups/new" +
-    `?type=${encodeURIComponent(groupType)}` +
-    `&external_type=${encodeURIComponent(externalType)}` +
-    `&name=${encodeURIComponent(groupName)}` +
-    `&policy=${encodeURIComponent(policy)}` +
-    `&url=${encodeURIComponent(policyUrl)}`;
+    `?type=${encodeURIComponent("external")}` +
+    `&external_type=${encodeURIComponent("auto_test")}` +
+    `&name=${encodeURIComponent(rawGroupName || "MyProxyGroup")}`;
 
   let ipText = "未获取";
-  let infoText = `策略组: ${groupName}`;
+  let infoText = rawGroupName
+    ? `策略组: ${rawGroupName}`
+    : "默认代理: PROXY";
 
-  if (ipCheckUrl) {
-    try {
-      const resp = await ctx.http.get(ipCheckUrl, {
-        policy: groupName,
-        timeout: 8000,
-      });
+  try {
+    const resp = await ctx.http.get(ipCheckUrl, {
+      policy: policyName,
+      timeout: 8000,
+    });
 
-      const text = (await resp.text()).trim();
-      ipText = text || "接口返回为空";
+    const text = (await resp.text()).trim();
+    ipText = text || "接口返回为空";
 
-      const ipInfo = ctx.lookupIP(text);
-      if (ipInfo) {
-        infoText = `${groupName} · ${ipInfo.country} · AS${ipInfo.asn} ${ipInfo.organization}`;
-      }
-    } catch (e) {
-      ipText = "查询失败";
-      infoText = `${groupName} · ${String(e)}`;
+    const ipInfo = ctx.lookupIP(text);
+    if (ipInfo) {
+      infoText = rawGroupName
+        ? `${rawGroupName} · ${ipInfo.country} · AS${ipInfo.asn} ${ipInfo.organization}`
+        : `PROXY · ${ipInfo.country} · AS${ipInfo.asn} ${ipInfo.organization}`;
     }
+  } catch (e) {
+    ipText = "查询失败";
+    infoText = rawGroupName
+      ? `${rawGroupName} · ${String(e)}`
+      : `PROXY · ${String(e)}`;
   }
 
   return {
@@ -61,15 +60,17 @@ export default async function (ctx) {
         children: [
           {
             type: "text",
-            text: "添加 / 更新策略组",
+            text: "添加策略组",
             font: { size: "body", weight: "semibold" },
             textColor: "#7EE787"
           },
           {
             type: "text",
-            text: `名称: ${groupName}`,
+            text: rawGroupName
+              ? `当前策略组: ${rawGroupName}`
+              : "当前策略组: 未设置，使用 PROXY",
             textColor: "#FFFFFF",
-            maxLines: 1,
+            maxLines: 2,
             minScale: 0.7
           }
         ]
