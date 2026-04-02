@@ -1,32 +1,46 @@
-#!name=节点检测工具
-#!desc=适用于 Egern 的节点检测工具，包含地理位置、节点解锁、入口落地查询。由于 Egern 机制限制，检测结果将通过仪表盘组件（Widget）或手动运行脚本展示。
+#!name=节点检测工具 (Egern 版)
+#!desc=通过“节点检测”策略组切换节点，并在仪表盘组件中实时显示该节点的地理位置、解锁及落地信息。
 #!author=xream, Keywos, KOP-XIAO, dcpengx
 #!homepage=https://hub.kelee.one
 #!icon=https://raw.githubusercontent.com/luestr/IconResource/main/Other_icon/120px/Node_detection_tool.png
 
-# 脚本定义
+# 1. 定义策略组，方便你手动切换测试节点
+proxy-groups:
+  - name: 节点检测
+    type: select
+    include-all-proxies: true
+
+# 2. 强制检测流量走上面定义的策略组
+rules:
+  - DOMAIN-SUFFIX, ip-api.com, 节点检测
+  - DOMAIN-SUFFIX, ipapi.co, 节点检测
+  - DOMAIN-SUFFIX, ip.sb, 节点检测
+  - DOMAIN-SUFFIX, netflix.com, 节点检测
+  - DOMAIN-SUFFIX, disneyplus.com, 节点检测
+
+# 3. 定义脚本
 scriptings:
-  - name: 入口落地查询
-    type: schedule
+  - name: 落地检测脚本
+    type: script
     script_url: https://kelee.one/Resource/JavaScript/Node_detection_tool/NetworkEntryAndExitQueries.js
-    timeout: 10
+    timeout: 15
 
-  - name: 地理位置查询
-    type: schedule
+  - name: 地理位置脚本
+    type: script
     script_url: https://kelee.one/Resource/JavaScript/Node_detection_tool/LocationDetection.js
-    timeout: 10
+    timeout: 15
 
-  - name: 节点解锁查询
-    type: schedule
+  - name: 节点解锁脚本
+    type: script
     script_url: https://kelee.one/Resource/JavaScript/Node_detection_tool/NodeUnlockDetection.js
     timeout: 20
 
-# 仪表盘面板定义（实现“面板显示详细信息”）
+# 4. 配置仪表盘面板显示
 widgets:
   - name: 节点检测面板
     title: 节点检测
     type: script
-    # 这里默认关联地理位置查询，你可以根据需要修改 script_name
-    script_name: 地理位置查询
-    update_interval: 3600
-    description: 显示当前连接节点的详细地理位置及解锁状态
+    # 这里默认展示“地理位置脚本”的结果，你可以点击组件刷新或切换
+    script_name: 地理位置脚本
+    update_interval: 60
+    description: 请在“节点检测”策略组中切换节点后，点击此处刷新结果
