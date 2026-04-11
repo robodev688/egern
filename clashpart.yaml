@@ -126,7 +126,7 @@ Select: &Select {type: select, url: 'http://connectivitycheck.platform.hicloud.c
 # 策略组
 proxy-groups:
 
-  - {name: 全部节点, <<: *Select, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Streaming.png}
+  - {name: 🏁-全部节点, <<: *Select, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Streaming.png}
     # 手动选择
   - {name: 手动选择, type: select, proxies: [🏁-全部节点,🇭🇰-香港, 🇯🇵-日本, 🇸🇬-新加坡, 🇺🇸-美国, 🇹🇼-台湾], url: http://connectivitycheck.platform.hicloud.com/generate_204, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Cylink.png}
 
