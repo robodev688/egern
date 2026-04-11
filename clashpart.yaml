@@ -142,10 +142,10 @@ proxy-groups:
   - {name: 🤖AIGC, type: select, proxies: [🎯节点选择, 🇸🇬-新加坡, 🇭🇰-香港, 🇯🇵-日本, 🇺🇸-美国,🇹🇼-台湾], icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png}
   
   # 主选择组
-  - {name: 🎯节点选择, type: select, proxies: [手动选择, 全部节点, DIRECT], url: http://connectivitycheck.platform.hicloud.com/generate_204, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Static.png}
+  - {name: 🎯节点选择, type: select, proxies: [手动选择, 🏁-全部节点, DIRECT], url: http://connectivitycheck.platform.hicloud.com/generate_204, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Static.png}
 
     # GLOBAL 策略组 (显式声明以添加图标)
-  - {name: GLOBAL, type: select, proxies: [手动选择, 全部节点, DIRECT] , icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Global.png}
+  - {name: GLOBAL, type: select, proxies: [手动选择, 🏁-全部节点, DIRECT] , icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Global.png}
 
 ### 规则配置
 RuleSet_classical: &RuleSet_classical {type: http, behavior: classical, interval: 43200, format: text, proxy: 🎯节点选择}
