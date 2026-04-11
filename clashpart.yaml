@@ -128,7 +128,7 @@ proxy-groups:
 
   - {name: 全部节点, <<: *Select, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Streaming.png}
     # 手动选择
-  - {name: 手动选择, type: select, proxies: [🇾🇹-全部节点,🇭🇰-香港, 🇯🇵-日本, 🇸🇬-新加坡, 🇺🇸-美国, 🇹🇼-台湾], url: http://connectivitycheck.platform.hicloud.com/generate_204, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Cylink.png}
+  - {name: 手动选择, type: select, proxies: [🏁-全部节点,🇭🇰-香港, 🇯🇵-日本, 🇸🇬-新加坡, 🇺🇸-美国, 🇹🇼-台湾], url: http://connectivitycheck.platform.hicloud.com/generate_204, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Cylink.png}
 
     # 手动选择 - 按地区 (已添加国旗图标)
   - {name: 🇭🇰-香港, <<: *Select, filter: *FilterHK, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/HK.png}
